@@ -15,9 +15,9 @@ type Tree struct {
 }
 
 //Add 添加节点
+//有序添加节点,左小右大
 func (this *Tree) Add(v int) {
 	node := &Node{Value: v}
-	//左小右大
 	if this.RootNode == nil {
 		this.RootNode = node
 		return
@@ -44,6 +44,33 @@ func (this *Tree) Add(v int) {
 
 		}
 
+	}
+}
+
+//Append 添加节点
+//广度优先，无规则添加
+func (this *Tree) Append(v int) {
+	node := &Node{Value: v}
+	if this.RootNode == nil {
+		this.RootNode = node
+		return
+	}
+	queue := []*Node{this.RootNode}
+	for len(queue) != 0 {
+		current := queue[0]
+		queue = queue[1:]
+		if current.Left == nil {
+			current.Left = node
+			return
+		} else {
+			queue = append(queue, current.Left)
+		}
+		if current.Right == nil {
+			current.Right = node
+			return
+		} else {
+			queue = append(queue, current.Right)
+		}
 	}
 }
 
@@ -76,6 +103,26 @@ func (this *Tree) PostOrder(node *Node) {
 	this.PostOrder(node.Right)
 	fmt.Println(node.Value)
 }
+
+//BreadthTravel 广度遍历
+func (this *Tree) BreadthTravel() {
+	if this.RootNode == nil {
+		return
+	}
+	queue := []*Node{this.RootNode}
+	for len(queue) != 0 {
+		current := queue[0]
+		queue = queue[1:]
+		fmt.Println(current.Value)
+		if current.Left != nil {
+			queue = append(queue, current.Left)
+		}
+		if current.Right != nil {
+			queue = append(queue, current.Right)
+		}
+	}
+
+}
 func main() {
 	tree := Tree{}
 
@@ -87,11 +134,24 @@ func main() {
 	tree.Add(50)
 	tree.Add(100)
 	tree.Add(33)
+	tree.Add(66)
+
+	// tree.Append(0)
+	// tree.Append(5)
+	// tree.Append(2)
+	// tree.Append(10)
+	// tree.Append(7)
+	// tree.Append(50)
+	// tree.Append(100)
+	// tree.Append(33)
+	// tree.Append(66)
 
 	tree.PreOrder(tree.RootNode)
 	fmt.Println("-----------------")
 	tree.MidOrder(tree.RootNode)
 	fmt.Println("-----------------")
 	tree.PostOrder(tree.RootNode)
+	fmt.Println("-----------------")
+	tree.BreadthTravel()
 
 }
